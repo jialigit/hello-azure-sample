@@ -1,0 +1,36 @@
+spring:
+   cloud:
+     azure:
+       eventhub:
+         connection-string: <connection-string>
+         checkpoint-storage-account: <account-name>
+         checkpoint-access-key: <access-key>
+         checkpoint-container: <container-name>
+
+     stream:
+       bindings:
+         consume-in-0:
+           destination: queue1
+           group: $Default           
+         valid-out-0:
+           destination: queue2
+         reject-out-0:
+           destination: queue3
+         supply-out-0:
+           destination: queue1
+
+       default:
+         producer:
+           errorChannelEnabled: true
+           
+       eventhub:
+         bindings:
+           consume-in-0:
+             consumer:
+               checkpoint-mode: MANUAL
+      
+       function:
+         definition: consume;supply;
+       poller:
+         initial-delay: 0
+         fixed-delay: 1000
