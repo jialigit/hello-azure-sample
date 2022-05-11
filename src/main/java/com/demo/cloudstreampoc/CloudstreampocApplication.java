@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.ErrorMessage;
 
@@ -93,6 +94,11 @@ public class CloudstreampocApplication {
         System.out.println(message.getPayload().getStackTrace().toString());
         LOGGER.error("Handling customer ERROR: " + message.getOriginalMessage().getPayload());
     }
+
+//    @Bean("queue1.$Default.errors")
+//    PublishSubscribeChannel publishSubscribeChannel(){
+//        return new PublishSubscribeChannel();
+//    }
 
     @ServiceActivator(inputChannel = "queue1.errors")
     public void supplyError(Message<?> message) {

@@ -1,24 +1,46 @@
 spring:
    cloud:
      azure:
-       eventhub:
-         connection-string: <connection-string>
-         checkpoint-storage-account: <account-name>
-         checkpoint-access-key: <access-key>
-         checkpoint-container: <container-name>
-
+       msi-enabled: true
+       client-id: <client-id>
+       resource-group: <resource-groud-name>
+       subscription-id: <subscription>
      stream:
        bindings:
          consume-in-0:
            destination: queue1
            group: $Default           
          valid-out-0:
+           binder: eventhub-2
            destination: queue2
          reject-out-0:
+           binder: eventhub-2
            destination: queue3
          supply-out-0:
            destination: queue1
-
+       binders:
+         eventhub-1:
+           type: eventhub
+           default-candidate: true
+           environment:
+             spring:
+               cloud:
+                 azure:
+                   eventhub:
+                     namespace: <eventhub-namespace-1-name>
+                     checkpoint-storage-account: <storage-account-name>
+                     checkpoint-container: <container-name>
+         eventhub-2:
+           type: eventhub
+           default-candidate: false
+           environment:
+             spring:
+               cloud:
+                 azure:
+                   eventhub:
+                     namespace: <eventhub-namespace-2-name>
+                     checkpoint-storage-account: <storage-account-name>
+                     checkpoint-container: <container-name>
        default:
          producer:
            errorChannelEnabled: true
